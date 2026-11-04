@@ -1,0 +1,494 @@
+{
+ "file": "SmtFail.fst",
+ "greeting": {
+  "kind": "protocol-info",
+  "version": 3,
+  "features": [
+   "autocomplete",
+   "autocomplete/context",
+   "compute",
+   "compute/reify",
+   "compute/pure-subterms",
+   "describe-protocol",
+   "describe-repl",
+   "exit",
+   "lookup",
+   "lookup/context",
+   "lookup/documentation",
+   "lookup/definition",
+   "peek",
+   "pop",
+   "push",
+   "push-partial-checked-file",
+   "search",
+   "segment",
+   "vfs-add",
+   "tactic-ranges",
+   "interrupt",
+   "progress",
+   "full-buffer",
+   "format",
+   "restart-solver",
+   "cancel",
+   "fly-deps"
+  ]
+ },
+ "steps": [
+  {
+   "send": {
+    "query-id": "1",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module SmtFail\n\nlet ok (x:nat) : Lemma (x >= 0) = ()\n\nlet bad (x:nat) : Lemma (x > 5) = ()\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "info",
+     "contents": "Parsed 3 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "1.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "SmtFail.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         14
+        ]
+       },
+       "code-digest": "3cb6dd45deaf0d7dd0508630049b7457"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        36
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        36
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "SmtFail.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         36
+        ]
+       },
+       "code-digest": "d3d72ca85b7e91f4ae8fc643b87a6c96"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        36
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        36
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "SmtFail.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         36
+        ]
+       },
+       "code-digest": "d74eb6ecb869874fa14fd5d6498a366a"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.6",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "2",
+    "query": "full-buffer",
+    "args": {
+     "kind": "full",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module SmtFail\n\nlet ok (x:nat) : Lemma (x >= 0) = ()\n\nlet bad (x:nat) : Lemma (x > 5) = ()\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "info",
+     "contents": "Parsed 3 declarations\n"
+    },
+    {
+     "kind": "response",
+     "query-id": "2.1",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.2",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.3",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "message",
+     "query-id": "2.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "SmtFail.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         14
+        ]
+       },
+       "code-digest": "3cb6dd45deaf0d7dd0508630049b7457"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.5",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        36
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.7",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        36
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "SmtFail.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         36
+        ]
+       },
+       "code-digest": "d3d72ca85b7e91f4ae8fc643b87a6c96"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.7",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.8",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        36
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.9",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-failed",
+      "ranges": {
+       "fname": "SmtFail.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        36
+       ]
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.9",
+     "status": "failure",
+     "response": [
+      {
+       "level": "error",
+       "number": 19,
+       "message": "- Assertion failed\n- The SMT solver could not prove the query.\n- Failed to prove: x > 5\n- In context: x: Prims.nat\n- See also SmtFail.fst(5,24-5,31)\n",
+       "ranges": [
+        {
+         "fname": "SmtFail.fst",
+         "beg": [
+          5,
+          34
+         ],
+         "end": [
+          5,
+          36
+         ]
+        },
+        {
+         "fname": "SmtFail.fst",
+         "beg": [
+          5,
+          24
+         ],
+         "end": [
+          5,
+          31
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "kind": "message",
+     "query-id": "2.9",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  }
+ ]
+}

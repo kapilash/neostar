@@ -1,0 +1,8 @@
+{"file":"Clean.fst","steps":[
+ {"query":"full-buffer","args":{"kind":"lax","with-symbols":false,"line":0,"column":0}},
+ {"query":"compute","args":{"term":"2 + 3"}},
+ {"query":"compute","args":{"term":"List.Tot.length [1;2;3]"}},
+ {"query":"compute","args":{"term":"double 21"}},
+ {"query":"compute","args":{"term":"1 + \"a\""}},
+ {"query":"compute","args":{"term":"triple 1"}}
+]}

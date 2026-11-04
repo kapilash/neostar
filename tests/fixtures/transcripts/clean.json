@@ -1,0 +1,798 @@
+{
+ "file": "Clean.fst",
+ "greeting": {
+  "kind": "protocol-info",
+  "version": 3,
+  "features": [
+   "autocomplete",
+   "autocomplete/context",
+   "compute",
+   "compute/reify",
+   "compute/pure-subterms",
+   "describe-protocol",
+   "describe-repl",
+   "exit",
+   "lookup",
+   "lookup/context",
+   "lookup/documentation",
+   "lookup/definition",
+   "peek",
+   "pop",
+   "push",
+   "push-partial-checked-file",
+   "search",
+   "segment",
+   "vfs-add",
+   "tactic-ranges",
+   "interrupt",
+   "progress",
+   "full-buffer",
+   "format",
+   "restart-solver",
+   "cancel",
+   "fly-deps"
+  ]
+ },
+ "steps": [
+  {
+   "send": {
+    "query-id": "1",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module Clean\n\nlet double (x:int) : int = x + x\n\nlet lemma_double (x:int) : Lemma (double x == 2 * x) = ()\n\n(** The length of a list *)\nlet len (#a:Type) (l:list a) : nat = List.Tot.length l\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "info",
+     "contents": "Parsed 4 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "1.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        12
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        12
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         12
+        ]
+       },
+       "code-digest": "6d41b385d68578264bc087e89e39e8e2"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        32
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        32
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         32
+        ]
+       },
+       "code-digest": "aa05f6c0fc0ad95a6d1716e50cc8480e"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        57
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        57
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         57
+        ]
+       },
+       "code-digest": "2fd69ffebe21188c3e4f4419ff23a180"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.6",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.7",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        8,
+        0
+       ],
+       "end": [
+        8,
+        54
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.8",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        8,
+        0
+       ],
+       "end": [
+        8,
+        54
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         8,
+         0
+        ],
+        "end": [
+         8,
+         54
+        ]
+       },
+       "code-digest": "4380af1aff2a7e0d3d6da988df38e518"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.8",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.8",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "2",
+    "query": "lookup",
+    "args": {
+     "context": "code",
+     "symbol": "len",
+     "requested-info": [
+      "type",
+      "documentation",
+      "defined-at"
+     ],
+     "location": {
+      "filename": "Clean.fst",
+      "line": 8,
+      "column": 5
+     }
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "2",
+     "status": "success",
+     "response": {
+      "kind": "symbol",
+      "name": "Clean.len",
+      "defined-at": {
+       "fname": "Clean.fst",
+       "beg": [
+        8,
+        4
+       ],
+       "end": [
+        8,
+        7
+       ]
+      },
+      "type": "l: list a -> nat",
+      "documentation": null,
+      "definition": null
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "3",
+    "query": "lookup",
+    "args": {
+     "context": "code",
+     "symbol": "List.Tot.length",
+     "requested-info": [
+      "type",
+      "documentation",
+      "defined-at"
+     ],
+     "location": {
+      "filename": "Clean.fst",
+      "line": 8,
+      "column": 45
+     }
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "3",
+     "status": "success",
+     "response": {
+      "kind": "symbol",
+      "name": "FStar.List.Tot.Base.length",
+      "defined-at": {
+       "fname": "/home/kapilash/src/mine/FStar/stage3/out/lib/fstar/ulib/FStar.List.Tot.Base.fst",
+       "beg": [
+        84,
+        8
+       ],
+       "end": [
+        84,
+        14
+       ]
+      },
+      "type": "_: list 'a -> nat",
+      "documentation": null,
+      "definition": null
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "4",
+    "query": "lookup",
+    "args": {
+     "context": "code",
+     "symbol": "nosuchthing",
+     "requested-info": [
+      "type",
+      "documentation",
+      "defined-at"
+     ],
+     "location": {
+      "filename": "Clean.fst",
+      "line": 3,
+      "column": 0
+     }
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "4",
+     "status": "failure",
+     "response": "No such symbol, module, or namespace."
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "5",
+    "query": "autocomplete",
+    "args": {
+     "partial-symbol": "dou",
+     "context": "code"
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "5",
+     "status": "success",
+     "response": [
+      [
+       3,
+       "",
+       "double"
+      ],
+      [
+       0,
+       "<search term>",
+       "dou"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "6",
+    "query": "compute",
+    "args": {
+     "term": "double 21"
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "6",
+     "status": "success",
+     "response": "42 <: int"
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "7",
+    "query": "compute",
+    "args": {
+     "term": "List.Tot.length [1;2;3]"
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "7",
+     "status": "success",
+     "response": "3 <: i: int{i >= 0 == true <: prop}"
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "8",
+    "query": "compute",
+    "args": {
+     "term": "1 + \"a\""
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "8",
+     "status": "failure",
+     "response": "* Error 189 at  input(0,29-0,32):\n  - Expected expression of type int got expression \"a\" of type string\n"
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "9",
+    "query": "full-buffer",
+    "args": {
+     "kind": "full",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module Clean\n\nlet double (x:int) : int = x + x\n\nlet lemma_double (x:int) : Lemma (double x == 2 * x) = ()\n\n(** The length of a list *)\nlet len (#a:Type) (l:list a) : nat = List.Tot.length l\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "9",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "9",
+     "level": "info",
+     "contents": "Parsed 4 declarations\n"
+    },
+    {
+     "kind": "response",
+     "query-id": "9.1",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "9.2",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "9.3",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "9.4",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "message",
+     "query-id": "9.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        12
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "9.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        12
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         12
+        ]
+       },
+       "code-digest": "6d41b385d68578264bc087e89e39e8e2"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "9.6",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "9.7",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        32
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "9.8",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        32
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         32
+        ]
+       },
+       "code-digest": "aa05f6c0fc0ad95a6d1716e50cc8480e"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "9.8",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "9.9",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        57
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "9.10",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        57
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         57
+        ]
+       },
+       "code-digest": "2fd69ffebe21188c3e4f4419ff23a180"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "9.10",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "9.11",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        8,
+        0
+       ],
+       "end": [
+        8,
+        54
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "9.12",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Clean.fst",
+       "beg": [
+        8,
+        0
+       ],
+       "end": [
+        8,
+        54
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Clean.fst",
+        "beg": [
+         8,
+         0
+        ],
+        "end": [
+         8,
+         54
+        ]
+       },
+       "code-digest": "4380af1aff2a7e0d3d6da988df38e518"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "9.12",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "9.12",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  }
+ ]
+}

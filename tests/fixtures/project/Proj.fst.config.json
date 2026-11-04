@@ -1,0 +1,5 @@
+{
+  "fstar_exe": "fstar.exe",
+  "options": ["--warn_error", "-241"],
+  "include_dirs": ["lib"]
+}

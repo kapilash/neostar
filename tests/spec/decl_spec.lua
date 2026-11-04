@@ -1,0 +1,78 @@
+local decl = require("neostar.fstar.decl")
+
+local root = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":p:h:h")
+
+local function open(name, ext)
+  local src = root .. "/fixtures/agent/" .. name
+  local b = vim.api.nvim_create_buf(true, false)
+  vim.api.nvim_buf_set_name(b, vim.fn.tempname() .. "/" .. name:gsub("%.fst$", ext or ".fst"))
+  vim.api.nvim_buf_set_lines(b, 0, -1, false, vim.fn.readfile(src))
+  return b
+end
+
+describe("declaration extraction", function()
+  after_each(function()
+    for _, b in ipairs(vim.api.nvim_list_bufs()) do
+      pcall(vim.api.nvim_buf_delete, b, { force = true })
+    end
+  end)
+
+  it("splits a one-line lemma into statement and body", function()
+    local t = assert(decl.target_at(open("Decls.fst"), 2))
+    assert.equals("one", t.name)
+    assert.equals("let one (x:nat) : Lemma (x + 0 == x) = ", t.statement)
+    assert.equals("()", t.body)
+    assert.same({ 2, 39 }, { t.body_srow, t.body_scol })
+    assert.equals(0, t.module_row)
+    assert.is_nil(t.val)
+  end)
+
+  it("includes a matching val and a multi-line body", function()
+    local t = assert(decl.target_at(open("Decls.fst"), 6))
+    assert.equals("two", t.name)
+    assert.equals("let two x =\n  ", t.statement)
+    assert.equals("assert (x * 1 == x);\n  ()", t.body)
+    assert.equals("val two : x:nat -> Lemma (x * 1 == x)", t.val.text)
+    assert.same({ 4, 4 }, { t.val.srow, t.val.erow })
+  end)
+
+  it("handles let rec", function()
+    local t = assert(decl.target_at(open("Decls.fst"), 9))
+    assert.equals("fact", t.name)
+    assert.equals("if n = 0 then 1 else n * fact (n - 1)", t.body)
+  end)
+
+  it("keeps attributes and a multi-line signature in the statement", function()
+    local t = assert(decl.target_at(open("Decls.fst"), 18))
+    assert.equals("three", t.name)
+    assert.equals('[@@"opaque_to_smt"]\nlet three (x:nat)\n  : Lemma (ensures x + 0 == x)\n  = ', t.statement)
+    assert.equals("admit ()", t.body)
+    assert.equals(16, t.decl.srow)
+  end)
+
+  it("refuses type declarations, blank lines, mutual recursion and .fsti files", function()
+    local b = open("Decls.fst")
+    local t, err = decl.target_at(b, 11)
+    assert.is_nil(t)
+    assert.matches("needs the cursor on a `let`", err, 1, true)
+    t, err = decl.target_at(b, 3)
+    assert.is_nil(t)
+    assert.matches("needs the cursor on a `let`", err, 1, true)
+    t, err = decl.target_at(b, 13)
+    assert.is_nil(t)
+    assert.matches("mutually recursive", err, 1, true)
+    t, err = decl.target_at(open("Decls.fst", ".fsti"), 2)
+    assert.is_nil(t)
+    assert.matches(".fst file", err, 1, true)
+  end)
+
+  it("finds the declaration at a row for explain", function()
+    local b = open("Decls.fst")
+    local d = assert(decl.decl_at(b, 7))
+    assert.same({ "let_declaration", 5, 7 }, { d.type, d.srow, d.erow })
+    assert.same({ "val_declaration", 4 }, { decl.decl_at(b, 4).type, decl.decl_at(b, 4).srow })
+    local none, err = decl.decl_at(b, 1)
+    assert.is_nil(none)
+    assert.matches("no declaration", err)
+  end)
+end)

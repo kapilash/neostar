@@ -1,0 +1,6 @@
+{"file":"Prove.fst","steps":[
+ {"query":"full-buffer","code_file":"Prove_c1.fst","args":{"kind":"full","with-symbols":false,"line":0,"column":0}},
+ {"query":"full-buffer","code_file":"Prove_c2.fst","args":{"kind":"full","with-symbols":false,"line":0,"column":0}},
+ {"query":"full-buffer","code_file":"Prove_c3.fst","args":{"kind":"full","with-symbols":false,"line":0,"column":0}},
+ {"query":"full-buffer","code_file":"Prove_c4.fst","args":{"kind":"full","with-symbols":false,"line":0,"column":0}}
+]}

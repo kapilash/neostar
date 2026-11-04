@@ -1,0 +1,11 @@
+{"file":"Clean.fst","steps":[
+ {"query":"full-buffer","args":{"kind":"lax","with-symbols":false,"line":0,"column":0}},
+ {"query":"lookup","args":{"context":"code","symbol":"len","requested-info":["type","documentation","defined-at"],"location":{"filename":"Clean.fst","line":8,"column":5}}},
+ {"query":"lookup","args":{"context":"code","symbol":"List.Tot.length","requested-info":["type","documentation","defined-at"],"location":{"filename":"Clean.fst","line":8,"column":45}}},
+ {"query":"lookup","args":{"context":"code","symbol":"nosuchthing","requested-info":["type","documentation","defined-at"],"location":{"filename":"Clean.fst","line":3,"column":0}}},
+ {"query":"autocomplete","args":{"partial-symbol":"dou","context":"code"}},
+ {"query":"compute","args":{"term":"double 21"}},
+ {"query":"compute","args":{"term":"List.Tot.length [1;2;3]"}},
+ {"query":"compute","args":{"term":"1 + \"a\""}},
+ {"query":"full-buffer","args":{"kind":"full","with-symbols":false,"line":0,"column":0}}
+]}

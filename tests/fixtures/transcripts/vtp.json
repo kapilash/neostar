@@ -1,0 +1,1538 @@
+{
+ "file": "Ten.fst",
+ "greeting": {
+  "kind": "protocol-info",
+  "version": 3,
+  "features": [
+   "autocomplete",
+   "autocomplete/context",
+   "compute",
+   "compute/reify",
+   "compute/pure-subterms",
+   "describe-protocol",
+   "describe-repl",
+   "exit",
+   "lookup",
+   "lookup/context",
+   "lookup/documentation",
+   "lookup/definition",
+   "peek",
+   "pop",
+   "push",
+   "push-partial-checked-file",
+   "search",
+   "segment",
+   "vfs-add",
+   "tactic-ranges",
+   "interrupt",
+   "progress",
+   "full-buffer",
+   "format",
+   "restart-solver",
+   "cancel",
+   "fly-deps"
+  ]
+ },
+ "steps": [
+  {
+   "send": {
+    "query-id": "1",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module Ten\n\nlet d1 (x:int) : int = x + 1\n\nlet d2 (x:int) : int = x + 2\n\nlet d3 (x:int) : int = x + 3\n\nlet d4 (x:int) : int = x + 4\n\nlet d5 (x:int) : int = x + 5\n\nlet d6 (x:int) : int = x + 6\n\nlet d7 (x:int) : int = x + 7\n\nlet d8 (x:int) : int = x + 8\n\nlet d9 (x:int) : int = x + 9\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "info",
+     "contents": "Parsed 10 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "1.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        10
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        10
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         10
+        ]
+       },
+       "code-digest": "240d948b73410581bf8c85674d11a0e3"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         28
+        ]
+       },
+       "code-digest": "c97eec54d3a702d8e4162cb2c288443b"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         28
+        ]
+       },
+       "code-digest": "52be9e8e3f8ba84ad73cddf2aefdd934"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.6",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.7",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.8",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         7,
+         0
+        ],
+        "end": [
+         7,
+         28
+        ]
+       },
+       "code-digest": "852907b570a49afa2c511c805a186601"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.8",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.9",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        9,
+        0
+       ],
+       "end": [
+        9,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.10",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        9,
+        0
+       ],
+       "end": [
+        9,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         9,
+         0
+        ],
+        "end": [
+         9,
+         28
+        ]
+       },
+       "code-digest": "5ade9ed3b051055290c43d14cf40120c"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.10",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.11",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        11,
+        0
+       ],
+       "end": [
+        11,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.12",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        11,
+        0
+       ],
+       "end": [
+        11,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         11,
+         0
+        ],
+        "end": [
+         11,
+         28
+        ]
+       },
+       "code-digest": "857ebd3e2c836d0dcc8d756d70f08b83"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.12",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.13",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        13,
+        0
+       ],
+       "end": [
+        13,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.14",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        13,
+        0
+       ],
+       "end": [
+        13,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         13,
+         0
+        ],
+        "end": [
+         13,
+         28
+        ]
+       },
+       "code-digest": "3f53f501b1c3824580fe1b8166ef361b"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.14",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.15",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        15,
+        0
+       ],
+       "end": [
+        15,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.16",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        15,
+        0
+       ],
+       "end": [
+        15,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         15,
+         0
+        ],
+        "end": [
+         15,
+         28
+        ]
+       },
+       "code-digest": "7078f7cee14d56ae93687abad1431960"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.16",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.17",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        17,
+        0
+       ],
+       "end": [
+        17,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.18",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        17,
+        0
+       ],
+       "end": [
+        17,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         17,
+         0
+        ],
+        "end": [
+         17,
+         28
+        ]
+       },
+       "code-digest": "60af557eeafcb3918ad5c68a7a4d683a"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.18",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.19",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        19,
+        0
+       ],
+       "end": [
+        19,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.20",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        19,
+        0
+       ],
+       "end": [
+        19,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         19,
+         0
+        ],
+        "end": [
+         19,
+         28
+        ]
+       },
+       "code-digest": "5b093597166ad3174a7839c1c7e65760"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.20",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.20",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "2",
+    "query": "full-buffer",
+    "args": {
+     "kind": "verify-to-position",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "to-position": {
+      "line": 9,
+      "column": 5
+     },
+     "code": "module Ten\n\nlet d1 (x:int) : int = x + 1\n\nlet d2 (x:int) : int = x + 2\n\nlet d3 (x:int) : int = x + 3\n\nlet d4 (x:int) : int = x + 4\n\nlet d5 (x:int) : int = x + 5\n\nlet d6 (x:int) : int = x + 6\n\nlet d7 (x:int) : int = x + 7\n\nlet d8 (x:int) : int = x + 8\n\nlet d9 (x:int) : int = x + 9\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "info",
+     "contents": "Parsed 10 declarations\n"
+    },
+    {
+     "kind": "response",
+     "query-id": "2.1",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.2",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.3",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.4",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.5",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.6",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.7",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.8",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.9",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "response",
+     "query-id": "2.10",
+     "status": "success",
+     "response": null
+    },
+    {
+     "kind": "message",
+     "query-id": "2.11",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        10
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.12",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        10
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         10
+        ]
+       },
+       "code-digest": "240d948b73410581bf8c85674d11a0e3"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.12",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.13",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.14",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         28
+        ]
+       },
+       "code-digest": "c97eec54d3a702d8e4162cb2c288443b"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.14",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.15",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.16",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         28
+        ]
+       },
+       "code-digest": "52be9e8e3f8ba84ad73cddf2aefdd934"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.16",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.17",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.18",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         7,
+         0
+        ],
+        "end": [
+         7,
+         28
+        ]
+       },
+       "code-digest": "852907b570a49afa2c511c805a186601"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.18",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.19",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        9,
+        0
+       ],
+       "end": [
+        9,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.20",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        9,
+        0
+       ],
+       "end": [
+        9,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         9,
+         0
+        ],
+        "end": [
+         9,
+         28
+        ]
+       },
+       "code-digest": "5ade9ed3b051055290c43d14cf40120c"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.20",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.20",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "3",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module Ten\n\nlet d1 (x:int) : int = x + 1\n\nlet d2 (x:int) : int = x + 2\n\nlet d3 (x:int) : int = x + 3\n\nlet d4 (x:int) : int = x + 4\n\nlet d5 (x:int) : int = x + 5\n\nlet d6 (x:int) : int = x + 6\n\nlet d7 (x:int) : int = x + 7\n\nlet d8 (x:int) : int = x + 8\n\nlet d9 (x:int) : int = x + 9\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3",
+     "level": "info",
+     "contents": "Parsed 10 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        10
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         10
+        ]
+       },
+       "code-digest": "240d948b73410581bf8c85674d11a0e3"
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         28
+        ]
+       },
+       "code-digest": "c97eec54d3a702d8e4162cb2c288443b"
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         28
+        ]
+       },
+       "code-digest": "52be9e8e3f8ba84ad73cddf2aefdd934"
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         7,
+         0
+        ],
+        "end": [
+         7,
+         28
+        ]
+       },
+       "code-digest": "852907b570a49afa2c511c805a186601"
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        9,
+        0
+       ],
+       "end": [
+        9,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         9,
+         0
+        ],
+        "end": [
+         9,
+         28
+        ]
+       },
+       "code-digest": "5ade9ed3b051055290c43d14cf40120c"
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        11,
+        0
+       ],
+       "end": [
+        11,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        11,
+        0
+       ],
+       "end": [
+        11,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         11,
+         0
+        ],
+        "end": [
+         11,
+         28
+        ]
+       },
+       "code-digest": "857ebd3e2c836d0dcc8d756d70f08b83"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "3.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "3.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        13,
+        0
+       ],
+       "end": [
+        13,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        13,
+        0
+       ],
+       "end": [
+        13,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         13,
+         0
+        ],
+        "end": [
+         13,
+         28
+        ]
+       },
+       "code-digest": "3f53f501b1c3824580fe1b8166ef361b"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "3.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "3.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        15,
+        0
+       ],
+       "end": [
+        15,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        15,
+        0
+       ],
+       "end": [
+        15,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         15,
+         0
+        ],
+        "end": [
+         15,
+         28
+        ]
+       },
+       "code-digest": "7078f7cee14d56ae93687abad1431960"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "3.6",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "3.7",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        17,
+        0
+       ],
+       "end": [
+        17,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3.8",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        17,
+        0
+       ],
+       "end": [
+        17,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         17,
+         0
+        ],
+        "end": [
+         17,
+         28
+        ]
+       },
+       "code-digest": "60af557eeafcb3918ad5c68a7a4d683a"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "3.8",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "3.9",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        19,
+        0
+       ],
+       "end": [
+        19,
+        28
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "3.10",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Ten.fst",
+       "beg": [
+        19,
+        0
+       ],
+       "end": [
+        19,
+        28
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Ten.fst",
+        "beg": [
+         19,
+         0
+        ],
+        "end": [
+         19,
+         28
+        ]
+       },
+       "code-digest": "5b093597166ad3174a7839c1c7e65760"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "3.10",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "3.10",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,312 @@
+*neostar.txt*  F* support for Neovim
+
+==============================================================================
+CONTENTS                                                     *neostar-contents*
+
+  1. Introduction ............................... |neostar-intro|
+  2. Checking model ............................. |neostar-checking|
+  3. Commands ................................... |neostar-commands|
+  4. Verification frontier ...................... |neostar-signs|
+  5. Statusline ................................. |neostar-statusline|
+  6. LSP features ............................... |neostar-lsp|
+  7. Configuration .............................. |neostar-config|
+  8. Tree-sitter parsers ........................ |neostar-treesitter|
+  9. Agent bridge ............................... |neostar-agent|
+
+==============================================================================
+1. INTRODUCTION                                                 *neostar-intro*
+
+neostar attaches to buffers with 'filetype' `fstar` (`*.fst`, `*.fsti`). For
+each buffer it:
+
+- highlights the code with tree-sitter, including Pulse code inside
+  `#lang-pulse` tails and Pulse fences,
+- runs one `fstar.exe --ide` checker, configured from the nearest
+  `*.fst.config.json` (keys `fstar_exe`, `options`, `include_dirs`; relative
+  paths are relative to that file), or `fstar.exe` on $PATH,
+- shows a per-declaration verification frontier in the sign column,
+- provides hover, go-to-definition, completion and diagnostics through the
+  built-in LSP client (an in-process shim named `neostar`).
+
+==============================================================================
+2. CHECKING MODEL                                            *neostar-checking*
+
+Checking is lax by default. Lax mode type-checks without SMT, so it is fast
+but proves nothing about refinements or lemmas.
+
+- Opening a buffer, pausing after edits ('debounce_ms'), and reloading a
+  buffer changed on disk all start a lax check. An edit cancels a running
+  check first.
+- |:w| never starts a verification. It only lax-checks contents that have not
+  been checked yet.
+- Full verification (with SMT) runs only on |:NeostarVerify| or
+  |:NeostarVerifyToCursor|.
+- After a lax re-check, a declaration stays verified only if it and every
+  declaration above it are unchanged.
+- F* stops at the first failing declaration. Later declarations are shown as
+  not reached.
+
+==============================================================================
+3. COMMANDS                                                  *neostar-commands*
+
+                                                              *:NeostarVerify*
+:NeostarVerify          Fully verify the whole buffer, including SMT.
+
+                                                      *:NeostarVerifyToCursor*
+:NeostarVerifyToCursor  Fully verify from the top of the buffer up to the
+                        declaration under the cursor. The rest is
+                        lax-checked afterwards.
+
+                                                              *:NeostarCancel*
+:NeostarCancel          Cancel the running check. F* stops at the next
+                        declaration boundary. If it has not stopped after
+                        'cancel_timeout_ms' (for example, during a long SMT
+                        query), you are offered a kill and restart, which
+                        loses verified status.
+
+                                                             *:NeostarRestart*
+:NeostarRestart         Start a fresh checker for the buffer (for example,
+                        after it crashed) and lax-check it.
+
+                                                          *:NeostarReloadDeps*
+:NeostarReloadDeps      Restart the checker so it re-reads dependencies from
+                        disk, then lax-check. Verified marks are dropped
+                        because a dependency may have changed. This also
+                        happens automatically for other open buffers of the
+                        same project when you write an F* file.
+
+                                                             *:NeostarCompute*
+:NeostarCompute {expr}  Evaluate {expr} with F*'s normaliser in the context
+:'<,'>NeostarCompute    of the checked part of the buffer, or evaluate the
+                        visual selection. The result appears in a floating
+                        window. Press `q` or <Esc> to close it; it is
+                        focused, so you can yank from it. Evaluation is
+                        refused while a check is running.
+
+==============================================================================
+4. VERIFICATION FRONTIER                                        *neostar-signs*
+
+Each line of a top-level declaration gets a sign:
+
+  status        default  highlight group     default link ~
+  verified      ┃        NeostarVerified     DiagnosticOk
+  lax-only      ┆        NeostarLax          Comment
+  failed        ┃        NeostarFailed       DiagnosticError
+  in flight     │        NeostarInflight     DiagnosticWarn
+  not reached   ·        NeostarUnreached    NonText
+
+*NeostarVerified* *NeostarLax* *NeostarFailed* *NeostarInflight*
+*NeostarUnreached*
+Lax-only means type-checked without SMT. It is not proven. Change glyphs with
+the 'signs' option, or colours with |nvim_set_hl()|.
+
+==============================================================================
+5. STATUSLINE                                              *neostar-statusline*
+
+                                                            *neostar.status()*
+require("neostar").status([{bufnr}])
+    Returns `{ verified, lax, failed, unchecked, running, alive }` for the
+    buffer, or nil for non-F* buffers. `running` is nil when idle, otherwise
+    "lax", "full" or "verify-to-position".
+
+                                                        *neostar.statusline()*
+require("neostar").statusline([{bufnr}])
+    Short text such as `F* ✓17 ~25 ✗0 ?0 [full…]` (✓ verified, ~ lax-only,
+    ✗ failed, ? unchecked), or "" for non-F* buffers.
+
+==============================================================================
+6. LSP FEATURES                                                   *neostar-lsp*
+
+The `neostar` LSP client works with your usual mappings:
+
+- |vim.lsp.buf.hover()| shows the qualified name, type and documentation.
+- |vim.lsp.buf.definition()| jumps to the definition, opening library files.
+- Completion (|lsp-completion|, or plugins such as blink.cmp / nvim-cmp)
+  offers identifiers known to the checker.
+- F* errors and warnings appear as |vim.diagnostic| entries with the F*
+  error number as the code. Issues in other files are attached to the first
+  line, and the message names the location.
+
+Hover, definition and completion never cancel a check. During a full
+verification they return no result at once. During a lax check they wait up
+to 'lax_request_timeout_ms'.
+
+==============================================================================
+7. CONFIGURATION                                               *neostar-config*
+
+Calling setup() is optional. These are the defaults: >lua
+
+    require("neostar").setup({
+      fstar_exe = nil,              -- override the F* executable
+      debounce_ms = 500,            -- pause after edits before lax-checking
+      lax_request_timeout_ms = 2000,
+      cancel_timeout_ms = 5000,
+      signs = {
+        verified  = { text = "┃", hl = "NeostarVerified" },
+        lax       = { text = "┆", hl = "NeostarLax" },
+        failed    = { text = "┃", hl = "NeostarFailed" },
+        inflight  = { text = "│", hl = "NeostarInflight" },
+        unreached = { text = "·", hl = "NeostarUnreached" },
+      },
+      lsp = true,                   -- start the in-process LSP client
+      treesitter = true,            -- start tree-sitter highlighting
+      agent = {                     -- see |neostar-agent|
+        runner = "auto",            -- "auto", "claude" or "copilot"
+        claude = { cmd = "claude", model = nil },   -- nil: default model
+        copilot = {
+          cmd = "copilot", model = nil, -- nil: default model
+          transport = "auto",          -- "auto", "sdk" or "cli"
+          helper = "neostar-copilot",  -- optional native Rust helper
+        },
+        max_checks = 10,            -- candidate checks per |:NeostarProve|
+        timeout_ms = 300000,        -- time limit per |:NeostarProve|
+      },
+    })
+<
+==============================================================================
+8. TREE-SITTER PARSERS                                     *neostar-treesitter*
+
+Highlighting uses the `fstar` and `pulse` parsers from
+https://github.com/FStarLang/tree-sitter-fstar at revision
+f5aca8ce0122f0ac10eaeb6f3081382d59d294f2 (the bundled queries come from it).
+
+With nvim-treesitter: >vim
+    :TSInstall fstar pulse
+<
+Without it, build the two parsers into a `parser/` directory on
+'runtimepath': >sh
+    git clone https://github.com/FStarLang/tree-sitter-fstar
+    cd tree-sitter-fstar
+    git checkout f5aca8ce0122f0ac10eaeb6f3081382d59d294f2
+    mkdir -p ~/.local/share/nvim/site/parser
+    cc -O2 -shared -fPIC -Isrc -o ~/.local/share/nvim/site/parser/fstar.so \
+        src/parser.c src/scanner.c
+    cc -O2 -shared -fPIC -Ipulse/src -o ~/.local/share/nvim/site/parser/pulse.so \
+        pulse/src/parser.c pulse/src/scanner.c
+<
+==============================================================================
+9. AGENT BRIDGE                                                 *neostar-agent*
+
+neostar starts a coding agent itself, inside Neovim, in the agent's
+non-interactive mode. Two agents are supported:
+
+  Claude Code         `claude -p`; options `agent.claude.cmd` and
+                      `agent.claude.model`. The project's `CLAUDE.md`
+                      applies. Runs cost tokens on your Claude account.
+  GitHub Copilot CLI  `copilot` (prompt on stdin, JSON output); options
+                      `agent.copilot.cmd` and `agent.copilot.model`. The
+                      project's `AGENTS.md` and Copilot instruction files
+                      apply. Each Explain, Prove or follow-up costs one
+                      premium request times the model's multiplier.
+                      Needs MCP servers allowed by your organization's
+                      Copilot policy; if Copilot cannot reach neostar's
+                      tools, the run stops with an error saying so.
+
+                                                      *neostar-agent-runner*
+`agent.runner` chooses the agent. With "auto" (the default), each run uses
+Claude Code if `agent.claude.cmd` is executable, otherwise Copilot CLI if
+`agent.copilot.cmd` is; with neither, agent commands show one error naming
+both options. "claude" or "copilot" forces one. A follow-up question always
+goes to the agent that started the conversation. Without a model option,
+the agent's own default model is used. The former `agent.cmd` and
+`agent.model` options were replaced by these per-agent tables; setting them
+shows an error naming the replacement.
+
+The agent runs in the project root (the directory of `*.fst.config.json`,
+else the file's directory). What it can do:
+- read files in the project (Claude: Read, Grep, Glob; Copilot: view, glob,
+  rg),
+- call neostar's F* tools, which use the buffer's running checker:
+  `neostar_context`, `fstar_lookup`, `fstar_compute`, `fstar_diagnostics` (and, for
+  |:NeostarProve|, `check_proof` and `propose_proof`).
+It has no tool that writes files or runs commands, and your other MCP
+servers (including Copilot's built-in GitHub server) are not available to
+it. Anything it can read, the agent can already read in that project. The
+tools are served on 127.0.0.1 with a random port and a token per run.
+
+                                                     *neostar-copilot-sdk*
+Optional persistent Copilot transport: from the neostar repository, with
+Rust 1.94 or later: >sh
+    cargo install --locked --path tools/copilot
+<
+Put Cargo's bin directory on Neovim's PATH and set `agent.runner = "copilot"`.
+No Node.js helper dependency is required. The helper uses the installed,
+authenticated `agent.copilot.cmd`.
+
+`agent.copilot.transport` is "auto" by default: use the Rust helper if found,
+otherwise the existing CLI runner. "sdk" requires the helper; "cli" forces
+one CLI process per turn. `agent.copilot.helper` sets its executable/path.
+SDK failures never silently retry a paid request using the CLI.
+
+One SDK runtime is kept per project/executable, with separate conversations
+for Explain windows. A follow-up retains its original runner, transport and
+model, even after setup() changes. MCP tokens are replaced every turn.
+Runtimes close when their last source buffer detaches or Neovim exits.
+SDK session data lives below stdpath("state")/neostar/copilot, separately
+from terminal Copilot conversations.
+
+`:checkhealth neostar` reports F*/agent executables, parsers, runner, model
+and transport. Agent windows show the runner/transport and configured model.
+Markdown highlighting is optional; missing parsers do not break the float.
+
+`neostar_context` returns the complete unsaved source, editor revision,
+selection/target, diagnostics and checker freshness. Disk-reading tools
+are not authoritative for an edited buffer. Checker queries wait for current
+unsaved text and reject results if the buffer changes while querying.
+
+                                                             *:NeostarExplain*
+:NeostarExplain         Explain the declaration under the cursor.
+:'<,'>NeostarExplain    Explain the selected lines.
+                        The agent gets the code, the F* status of its
+                        declarations and the F* errors in the range. With
+                        errors, it explains why F* rejects the code and how
+                        to fix it. The answer streams into a float:
+                          f           ask a follow-up question (same
+                                      conversation)
+                          q, <Esc>    close; stops a run in progress
+                        Each follow-up refreshes the selected unsaved code
+                        and diagnostics. Deleted selections require a new
+                        explanation. A follow-up cannot replace an active
+                        request, and closing an old window cannot cancel a
+                        newer request.
+
+                                                               *:NeostarProve*
+:NeostarProve           Ask the agent to prove the `let` under the cursor in
+                        an .fst file. Rules, enforced by neostar:
+                        - The agent supplies only a proof body and new helper
+                          declarations, inserted directly above the target
+                          (above its `val`, if any). The statement is taken
+                          verbatim from the buffer and never changes.
+                        - `admit`, `assume`, `magic`, `expect_failure` and
+                          options that turn off checking are rejected.
+                        - Candidates are checked in a separate scratch F*
+                          process: the code above the target without SMT,
+                          the helpers and target with full verification.
+                          The buffer's own checker is not affected.
+                        - At most `agent.max_checks` checks and
+                          `agent.timeout_ms` per request, including review
+                          and accept-time rechecking.
+                        Only a proof that passed full verification is shown,
+                        as a diff:
+                          a           accept: one edit, one |u| undoes it;
+                                      the buffer is then lax-checked
+                          r, q        reject: nothing changes
+                          <CR>        jump to the target
+                        If the code above the target changed meanwhile, the
+                        proof is re-checked first and refused if it no
+                        longer verifies. Moving the target is safe, but
+                        changing its statement, val or body requires a new
+                        request. Edits during asynchronous rechecking refuse
+                        the result instead of overwriting newer text.
+                        The file is not written.
+                        Mutually recursive `let rec ... and ...` targets are
+                        not supported yet.
+
+                                                           *:NeostarAgentStop*
+:NeostarAgentStop       Stop the agent run for the current buffer (also works
+                        from inside an agent window or proof diff), review
+                        and any F* work it started. Unloading the source
+                        buffer also stops its request. The buffer is not
+                        changed.
+
+ vim:tw=78:ts=8:ft=help:norl:

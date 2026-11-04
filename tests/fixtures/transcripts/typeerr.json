@@ -1,0 +1,484 @@
+{
+ "file": "TypeErr.fst",
+ "greeting": {
+  "kind": "protocol-info",
+  "version": 3,
+  "features": [
+   "autocomplete",
+   "autocomplete/context",
+   "compute",
+   "compute/reify",
+   "compute/pure-subterms",
+   "describe-protocol",
+   "describe-repl",
+   "exit",
+   "lookup",
+   "lookup/context",
+   "lookup/documentation",
+   "lookup/definition",
+   "peek",
+   "pop",
+   "push",
+   "push-partial-checked-file",
+   "search",
+   "segment",
+   "vfs-add",
+   "tactic-ranges",
+   "interrupt",
+   "progress",
+   "full-buffer",
+   "format",
+   "restart-solver",
+   "cancel",
+   "fly-deps"
+  ]
+ },
+ "steps": [
+  {
+   "send": {
+    "query-id": "1",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module TypeErr\n\nlet ok (x:int) : int = x\n\nlet bad (x:int) : bool = x\n\nlet after (y:int) : int = y + 1\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "info",
+     "contents": "Parsed 4 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "1.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "TypeErr.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         14
+        ]
+       },
+       "code-digest": "e8e66db9812933e310f549c862d92977"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        24
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        24
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "TypeErr.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         24
+        ]
+       },
+       "code-digest": "50b3bc767899f70ff60629b004c69305"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        26
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-failed",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        26
+       ]
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.6",
+     "status": "failure",
+     "response": [
+      {
+       "level": "error",
+       "number": 189,
+       "message": "- Expected expression of type bool got expression x of type int\n- See also TypeErr.fst(5,9-5,10)\n",
+       "ranges": [
+        {
+         "fname": "TypeErr.fst",
+         "beg": [
+          5,
+          25
+         ],
+         "end": [
+          5,
+          26
+         ]
+        },
+        {
+         "fname": "TypeErr.fst",
+         "beg": [
+          5,
+          9
+         ],
+         "end": [
+          5,
+          10
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "2",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module TypeErr\n\nlet ok (x:int) : int = x\n\nlet bad (x:int) : bool = x > 0\n\nlet after (y:int) : int = y + 1\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "info",
+     "contents": "Parsed 4 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "TypeErr.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         14
+        ]
+       },
+       "code-digest": "e8e66db9812933e310f549c862d92977"
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        24
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "TypeErr.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         24
+        ]
+       },
+       "code-digest": "50b3bc767899f70ff60629b004c69305"
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        30
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        30
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "TypeErr.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         30
+        ]
+       },
+       "code-digest": "65fec0f960c9da344861170fce5301de"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        31
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "2.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "TypeErr.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        31
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "TypeErr.fst",
+        "beg": [
+         7,
+         0
+        ],
+        "end": [
+         7,
+         31
+        ]
+       },
+       "code-digest": "34b8853618bea151477129acd57b69ee"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "2.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "2.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  }
+ ]
+}

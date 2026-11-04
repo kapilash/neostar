@@ -1,0 +1,299 @@
+{
+ "file": "Unicode.fst",
+ "greeting": {
+  "kind": "protocol-info",
+  "version": 3,
+  "features": [
+   "autocomplete",
+   "autocomplete/context",
+   "compute",
+   "compute/reify",
+   "compute/pure-subterms",
+   "describe-protocol",
+   "describe-repl",
+   "exit",
+   "lookup",
+   "lookup/context",
+   "lookup/documentation",
+   "lookup/definition",
+   "peek",
+   "pop",
+   "push",
+   "push-partial-checked-file",
+   "search",
+   "segment",
+   "vfs-add",
+   "tactic-ranges",
+   "interrupt",
+   "progress",
+   "full-buffer",
+   "format",
+   "restart-solver",
+   "cancel",
+   "fly-deps"
+  ]
+ },
+ "steps": [
+  {
+   "send": {
+    "query-id": "1",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module Unicode\n\nlet \u03b1\u03b2\u03b3 (x:int) : int = x\n\nlet \u03b4 : bool = \u03b1\u03b2\u03b3 1\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "info",
+     "contents": "Parsed 3 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "1.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Unicode.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Unicode.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        14
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Unicode.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         14
+        ]
+       },
+       "code-digest": "2729ceea7c33dfc7a3507827b48b141f"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Unicode.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        25
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Unicode.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        25
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Unicode.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         25
+        ]
+       },
+       "code-digest": "0efea02d9ec517dd8c13fbf7485fc34b"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Unicode.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        20
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-failed",
+      "ranges": {
+       "fname": "Unicode.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        20
+       ]
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.6",
+     "status": "failure",
+     "response": [
+      {
+       "level": "error",
+       "number": 12,
+       "message": "- Expected type bool but \u03b1\u03b2\u03b3 1 has type int\n",
+       "ranges": [
+        {
+         "fname": "Unicode.fst",
+         "beg": [
+          5,
+          15
+         ],
+         "end": [
+          5,
+          20
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  },
+  {
+   "send": {
+    "query-id": "2",
+    "query": "lookup",
+    "args": {
+     "context": "code",
+     "symbol": "\u03b1\u03b2\u03b3",
+     "requested-info": [
+      "type",
+      "documentation",
+      "defined-at"
+     ],
+     "location": {
+      "filename": "Unicode.fst",
+      "line": 5,
+      "column": 16
+     }
+    }
+   },
+   "recv": [
+    {
+     "kind": "response",
+     "query-id": "2",
+     "status": "success",
+     "response": {
+      "kind": "symbol",
+      "name": "Unicode.\u03b1\u03b2\u03b3",
+      "defined-at": {
+       "fname": "Unicode.fst",
+       "beg": [
+        3,
+        4
+       ],
+       "end": [
+        3,
+        7
+       ]
+      },
+      "type": "x: int -> int",
+      "documentation": null,
+      "definition": null
+     }
+    }
+   ]
+  }
+ ]
+}

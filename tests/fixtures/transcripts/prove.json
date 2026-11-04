@@ -1,0 +1,423 @@
+{
+ "file": "Prove.fst",
+ "greeting": {
+  "kind": "protocol-info",
+  "version": 3,
+  "features": [
+   "autocomplete",
+   "autocomplete/context",
+   "compute",
+   "compute/reify",
+   "compute/pure-subterms",
+   "describe-protocol",
+   "describe-repl",
+   "exit",
+   "lookup",
+   "lookup/context",
+   "lookup/documentation",
+   "lookup/definition",
+   "peek",
+   "pop",
+   "push",
+   "push-partial-checked-file",
+   "search",
+   "segment",
+   "vfs-add",
+   "tactic-ranges",
+   "interrupt",
+   "progress",
+   "full-buffer",
+   "format",
+   "restart-solver",
+   "cancel",
+   "fly-deps"
+  ]
+ },
+ "steps": [
+  {
+   "send": {
+    "query-id": "1",
+    "query": "full-buffer",
+    "args": {
+     "kind": "lax",
+     "with-symbols": false,
+     "line": 0,
+     "column": 0,
+     "code": "module Prove\n\nlet bad_prefix (x:nat) : Lemma (x + 1 == x) = ()\n\nlet ok_prefix (x:nat) : Lemma (x + 0 == x) = ()\n\nval target : x:nat -> Lemma (x * 1 + 0 == x)\nlet target x =\n  admit ()\n\nlet after (x:nat) : Lemma (x >= 0) = ()\n"
+    }
+   },
+   "recv": [
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-started"
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1",
+     "level": "info",
+     "contents": "Parsed 6 declarations\n"
+    },
+    {
+     "kind": "message",
+     "query-id": "1.1",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        12
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.2",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        1,
+        0
+       ],
+       "end": [
+        1,
+        12
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Prove.fst",
+        "beg": [
+         1,
+         0
+        ],
+        "end": [
+         1,
+         12
+        ]
+       },
+       "code-digest": "5725642eeb97727a2b4016faddb1a298"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.2",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.3",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        48
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.4",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        3,
+        0
+       ],
+       "end": [
+        3,
+        48
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Prove.fst",
+        "beg": [
+         3,
+         0
+        ],
+        "end": [
+         3,
+         48
+        ]
+       },
+       "code-digest": "15443d03aedcc5db8dfaa0d7de905873"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.4",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.5",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        47
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.6",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        5,
+        0
+       ],
+       "end": [
+        5,
+        47
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Prove.fst",
+        "beg": [
+         5,
+         0
+        ],
+        "end": [
+         5,
+         47
+        ]
+       },
+       "code-digest": "42fb533856d0d7c42dff2d495d1f9a3d"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.6",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.7",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        44
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.8",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        7,
+        0
+       ],
+       "end": [
+        7,
+        44
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Prove.fst",
+        "beg": [
+         7,
+         0
+        ],
+        "end": [
+         7,
+         44
+        ]
+       },
+       "code-digest": "73ee48eba5884fc0b925e3846f68f88c"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.8",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.9",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        8,
+        0
+       ],
+       "end": [
+        9,
+        10
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.10",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        8,
+        0
+       ],
+       "end": [
+        9,
+        10
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Prove.fst",
+        "beg": [
+         8,
+         0
+        ],
+        "end": [
+         9,
+         10
+        ]
+       },
+       "code-digest": "1fe4d46dfb9b7614b6a1fa82524e569d"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.10",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.11",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-started",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        11,
+        0
+       ],
+       "end": [
+        11,
+        39
+       ]
+      }
+     }
+    },
+    {
+     "kind": "message",
+     "query-id": "1.12",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-fragment-lax-ok",
+      "ranges": {
+       "fname": "Prove.fst",
+       "beg": [
+        11,
+        0
+       ],
+       "end": [
+        11,
+        39
+       ]
+      },
+      "code-fragment": {
+       "range": {
+        "fname": "Prove.fst",
+        "beg": [
+         11,
+         0
+        ],
+        "end": [
+         11,
+         39
+        ]
+       },
+       "code-digest": "ae4124de13a2077cbfdcbbf5cddbd1b1"
+      }
+     }
+    },
+    {
+     "kind": "response",
+     "query-id": "1.12",
+     "status": "success",
+     "response": []
+    },
+    {
+     "kind": "message",
+     "query-id": "1.12",
+     "level": "progress",
+     "contents": {
+      "stage": "full-buffer-finished"
+     }
+    }
+   ]
+  }
+ ]
+}

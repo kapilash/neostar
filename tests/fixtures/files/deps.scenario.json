@@ -1,0 +1,1 @@
+{"file":"DepA.fst","steps":[ {"query":"full-buffer","args":{"kind":"lax","with-symbols":false,"line":0,"column":0}}, {"query":"full-buffer","args":{"kind":"reload-deps","with-symbols":false,"line":0,"column":0}}, {"query":"full-buffer","args":{"kind":"lax","with-symbols":false,"line":0,"column":0}} ]}

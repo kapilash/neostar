@@ -1,0 +1,2 @@
+{"file":"Unicode.fst","steps":[ {"query":"full-buffer","args":{"kind":"lax","with-symbols":false,"line":0,"column":0}},
+ {"query":"lookup","args":{"context":"code","symbol":"αβγ","requested-info":["type","documentation","defined-at"],"location":{"filename":"Unicode.fst","line":5,"column":16}}} ]}

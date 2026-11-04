@@ -1,0 +1,6 @@
+describe("test harness", function()
+  it("loads the plugin", function()
+    assert.is_true(vim.g.loaded_neostar)
+    assert.equals(2, vim.fn.exists(":NeostarVerify"))
+  end)
+end)
