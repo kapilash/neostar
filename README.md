@@ -82,38 +82,7 @@ Two agents are supported. With the default `agent.runner = "auto"`, neostar uses
 
 Without a model setting, each agent uses its own default model; for Copilot that may be a premium model, so consider setting `agent.copilot.model`. If Copilot cannot connect to neostar's tool server (for example because a policy disables MCP servers), the run stops with an error saying so.
 
-### Persistent Copilot runtime (optional Rust helper)
-
-From the neostar repository, install the native helper with Rust 1.94 or later:
-
-```sh
-cargo install --locked --path tools/copilot
-```
-
-Put Cargo's bin directory (normally `~/.cargo/bin`) on Neovim's `PATH`, and select Copilot:
-
-```lua
-require("neostar").setup({ agent = { runner = "copilot" } })
-```
-
-The default `agent.copilot.transport = "auto"` uses `neostar-copilot` when installed, otherwise the existing CLI transport. `"sdk"` requires the helper; `"cli"` always starts a CLI process per turn. Set `agent.copilot.helper` for a custom helper path. No Node.js helper dependency is needed: the Rust binary uses the installed, authenticated `agent.copilot.cmd`.
-
-The SDK transport keeps one runtime per project/executable and separate conversations per Explain window. Follow-ups keep their original runner, model and transport, even if `setup()` changes. MCP credentials are replaced on each turn; failures are reported without silently retrying a paid request through another transport. Runtimes close when their last source buffer detaches or Neovim exits. SDK conversations are stored below `stdpath("state")/neostar/copilot`, separately from terminal Copilot sessions.
-
-`:checkhealth neostar` reports executable/parser availability, runner, model and transport. Agent windows also show the runner/transport and configured model. Missing Markdown parsers no longer prevent agent windows from opening.
-
-### Explain
-
-`:NeostarExplain` explains the declaration under the cursor; `:'<,'>NeostarExplain` explains the selected lines. The agent receives the code, the F\* status of its declarations and any F\* errors in the range. If there are errors, it explains why F\* rejects the code and how it could be fixed. The answer streams into a float:
-
-| Key | Action |
-|---|---|
-| `f` | ask a follow-up question in the same conversation |
-| `q` / `<Esc>` | close (stops the agent if it is still answering) |
-
-Follow-ups refresh the selected unsaved code, revision and diagnostics rather than relying on the first prompt. If the selection is deleted, start a new explanation. A follow-up cannot replace another active request.
-
-### Prove
+### Persistent Copilot runti
 
 `:NeostarProve` asks the agent to prove the `let` under the cursor (in an `.fst` file). The agent works against F\*:
 
