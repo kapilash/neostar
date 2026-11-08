@@ -1,6 +1,8 @@
 :NeostarAgentStop	neostar.txt	/*:NeostarAgentStop*
 :NeostarCancel	neostar.txt	/*:NeostarCancel*
 :NeostarCompute	neostar.txt	/*:NeostarCompute*
+:NeostarDocs	neostar.txt	/*:NeostarDocs*
+:NeostarDocsReload	neostar.txt	/*:NeostarDocsReload*
 :NeostarExplain	neostar.txt	/*:NeostarExplain*
 :NeostarProve	neostar.txt	/*:NeostarProve*
 :NeostarReloadDeps	neostar.txt	/*:NeostarReloadDeps*
@@ -18,10 +20,13 @@ neostar-checking	neostar.txt	/*neostar-checking*
 neostar-commands	neostar.txt	/*neostar-commands*
 neostar-config	neostar.txt	/*neostar-config*
 neostar-contents	neostar.txt	/*neostar-contents*
+neostar-copilot-sdk	neostar.txt	/*neostar-copilot-sdk*
+neostar-fstardoc	neostar.txt	/*neostar-fstardoc*
 neostar-intro	neostar.txt	/*neostar-intro*
 neostar-lsp	neostar.txt	/*neostar-lsp*
 neostar-signs	neostar.txt	/*neostar-signs*
 neostar-statusline	neostar.txt	/*neostar-statusline*
+neostar-telescope	neostar.txt	/*neostar-telescope*
 neostar-treesitter	neostar.txt	/*neostar-treesitter*
 neostar.status()	neostar.txt	/*neostar.status()*
 neostar.statusline()	neostar.txt	/*neostar.statusline()*

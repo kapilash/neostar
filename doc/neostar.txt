@@ -231,20 +231,29 @@ explanation follow-ups: >lua
       agent = {
         docs = {
           enabled = true,
-          python = "python3",
-          server = vim.fn.expand(
-            "~/src/mine/FStar/.scripts/fstardoc/fstardoc_mcp.py"
-          ),
           index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
         },
       },
     })
 <
 Defaults: disabled, python = "python3", server unset, and index at the path
-above. Configure a local fstardoc server and an already-generated JSON index.
-Paths expand ~ and resolve relative to setup-time cwd. Serving requires only
-Python's standard library; markdown-it is not needed. Index generation and
-tool installation are external; neostar never checks source to build an index.
+above. neostar reads the index itself and answers queries in process; no
+Python is needed. Generate the index externally with `fstardoc_mcp.py index`;
+neostar never checks source to build one. It reads index schema
+`fstardoc-retrieval-index` version 1 and refuses other versions. Paths expand
+~ and resolve relative to setup-time cwd.
+
+Set `server` to an fstardoc_mcp.py to have `python server serve --index index`
+answer instead (only Python's standard library is needed for serving): >lua
+    docs = {
+      enabled = true,
+      index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
+      server = vim.fn.expand(
+        "~/src/mine/FStar/.scripts/fstardoc/fstardoc_mcp.py"
+      ),
+    },
+<
+Both backends give the same answers.
 
 Six read-only tools use neostar's existing authenticated endpoint:
   fstardoc_find_by_contract   Discover declarations by requires/ensures.
@@ -265,17 +274,42 @@ Use fstar_lookup for live checker context and neostar_context for unsaved
 source. Documentation never replaces full proof checking or human review.
 Missing or failed documentation warns in the agent window and continues with
 checker tools. Follow-ups retain the conversation's documentation configuration.
+The in-process backend re-reads the index file when it changes.
 
                                                      *:NeostarDocsReload*
 :NeostarDocsReload      Discard loaded documentation after replacing its JSON
-                        file externally. Pending retrievals receive a retry
-                        error; subsequent calls read the replacement. Checking,
+                        file externally, and restart a configured server.
+                        Pending server retrievals receive a retry error;
+                        subsequent calls read the replacement. Checking,
                         agent inference and proof review are not stopped.
                         Requests that started without docs gain them only on a
                         new request. Does not generate or write the index.
 
-`:checkhealth neostar` reports documentation configuration, prerequisites and
-the last backend error without launching an agent or building an index.
+`:checkhealth neostar` reports the documentation backend, configuration,
+prerequisites and the last backend error without launching an agent or
+building an index.
+
+                                                     *:NeostarDocs*
+:NeostarDocs [module]   Browse the declarations in `agent.docs.index` (all, or
+                        one module's; module names complete). Uses Telescope
+                        when installed, else |vim.ui.select()|. Does not need
+                        `agent.docs.enabled`. Fuzzy matching covers the name
+                        and the signature; the preview shows the signature,
+                        documentation, contract and definition.
+                          <CR>   open the source at the declaration
+                          <C-y>  insert the fully qualified name (Telescope)
+                        Sources are looked for in the project root and its
+                        `include_dirs`, the working directory, and the F*
+                        library (`fstar.exe --locate_lib`, `fstar.include`).
+
+                                                     *neostar-telescope*
+Telescope extension: >vim
+    :Telescope neostar declarations module=FStar.Seq.Base
+    :Telescope neostar modules
+<
+It is loaded on first :NeostarDocs, or with
+`require("telescope").load_extension("neostar")`. Choosing a module in
+`modules` lists its declarations.
 
                                                      *neostar-copilot-sdk*
 Optional persistent Copilot transport: from the neostar repository, with

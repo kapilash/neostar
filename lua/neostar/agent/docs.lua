@@ -1,4 +1,6 @@
---- Run-scoped retrieval over the external fstardoc stdio MCP server.
+--- Run-scoped library documentation tools for agents. By default they are
+--- answered in process from the fstardoc index (neostar.fstardoc); when
+--- `server` is set, they are proxied to that fstardoc stdio MCP server instead.
 local M = {}
 local uv = vim.uv
 local pools, leases = {}, {}
@@ -22,9 +24,19 @@ function M.normalize(config)
   return c
 end
 
+--- "local" (in-process index reader) or "server" (external fstardoc_mcp.py).
+function M.backend(c)
+  return (c.server and c.server ~= "") and "server" or "local"
+end
+
 function M.problem(c)
   if not c.enabled then
     return "documentation retrieval is disabled"
+  elseif M.backend(c) == "local" then
+    if vim.fn.filereadable(c.index) ~= 1 then
+      return "documentation index is not readable: " .. c.index
+    end
+    return nil
   elseif vim.fn.executable(c.python) ~= 1 then
     return "documentation Python executable not found: " .. c.python
   elseif not c.server or vim.fn.filereadable(c.server) ~= 1 then
@@ -306,6 +318,50 @@ function M.release(lease)
   end
 end
 
+--- Tools answered in process from the index file. The index is loaded when
+--- the run starts, and each call re-reads it if the file has changed.
+local function prepare_local(run, config, callback)
+  local index = require("neostar.fstardoc")
+  local _, err = index.load(config.index)
+  if err then
+    M.last_error = err
+    callback({}, err)
+    return
+  end
+  M.last_error = nil
+  local lease = { config = vim.deepcopy(config), backend = "local" }
+  leases[lease] = true
+  run.docs = lease
+  local tools = {}
+  for _, contract in ipairs(index.contracts) do
+    local name = contract.name
+    tools["fstardoc_" .. name] = {
+      description = contract.description,
+      inputSchema = vim.deepcopy(contract.inputSchema),
+      handler = function(args, _, respond)
+        if lease.released then
+          respond("documentation request ended", true)
+          return
+        end
+        local idx, load_err = index.load(lease.config.index)
+        if not idx then
+          M.last_error = load_err
+          if lease.on_error then lease.on_error(load_err) end
+          respond(load_err, true)
+          return
+        end
+        respond(index.call(idx, name, args))
+      end,
+    }
+  end
+  -- Asynchronous like the server backend, so callers see one behaviour.
+  vim.schedule(function()
+    if not lease.released then
+      callback(tools)
+    end
+  end)
+end
+
 function M.prepare(run, config, callback)
   if not config.enabled then
     callback({})
@@ -315,6 +371,10 @@ function M.prepare(run, config, callback)
   if err then
     M.last_error = err
     callback({}, err)
+    return
+  end
+  if M.backend(config) == "local" then
+    prepare_local(run, config, callback)
     return
   end
   local lease = { config = vim.deepcopy(config), key = vim.json.encode({ config.python, config.server, config.index }) }
@@ -398,6 +458,9 @@ function M.prepare_run(run, config, window, callback)
 end
 
 function M.reload()
+  if package.loaded["neostar.fstardoc"] then
+    require("neostar.fstardoc").clear()
+  end
   for lease in pairs(leases) do
     lease.failed = nil
   end

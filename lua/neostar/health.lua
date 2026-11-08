@@ -32,12 +32,17 @@ function M.check()
     local dc = neostar.options.agent.docs
     if dc.enabled then
       health.info("Documentation index: " .. dc.index)
-      health.info("Documentation server: " .. (dc.server or "(not configured)"))
+      local backend = docs.backend(dc)
+      if backend == "server" then
+        health.info("Documentation server: " .. dc.server .. " (" .. dc.python .. ")")
+      else
+        health.info("Documentation backend: in process (set agent.docs.server to use fstardoc_mcp.py instead)")
+      end
       local problem = docs.problem(dc)
       if problem then
         health.warn(problem)
       else
-        health.ok("Documentation retrieval prerequisites available (" .. dc.python .. ")")
+        health.ok("Documentation retrieval prerequisites available")
       end
       if docs.last_error then health.warn("Last documentation error: " .. docs.last_error) end
     else

@@ -414,6 +414,15 @@ function M.create_commands()
   cmd("NeostarCancel", M.cancel, { desc = "Cancel the running F* check" })
   cmd("NeostarRestart", M.restart, { desc = "Restart the F* checker for this buffer" })
   cmd("NeostarReloadDeps", M.reload_deps, { desc = "Reload F* dependencies from disk and re-check" })
+  cmd("NeostarDocs", function(a)
+    require("neostar.docs_browse").command(a.args ~= "" and a.args or nil)
+  end, {
+    nargs = "?",
+    complete = function(lead)
+      return require("neostar.docs_browse").complete(lead)
+    end,
+    desc = "Browse F* library declarations from the documentation index (Telescope if installed)",
+  })
   cmd("NeostarDocsReload", function()
     local docs = require("neostar.agent.docs")
     local err = docs.problem(M.options.agent.docs)

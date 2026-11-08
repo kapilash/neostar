@@ -61,6 +61,7 @@ If the `fstar` parser is missing, neostar shows one notification and turns highl
 | `:NeostarExplain` / `:'<,'>NeostarExplain` | Ask the agent to explain the declaration at the cursor or the selection (see [Agent bridge](#agent-bridge)) |
 | `:NeostarProve` | Ask the agent to prove the `let` under the cursor; a verified proof is shown as a diff to accept or reject |
 | `:NeostarAgentStop` | Stop the agent run for this buffer |
+| `:NeostarDocs [module]` | Browse library declarations from the documentation index (see [Browsing the documentation](#browsing-the-documentation)) |
 | `:NeostarCompute {expr}` / `:'<,'>NeostarCompute` | Evaluate an expression (or the selection) in the context of the checked code and show the result in a float (`q` closes it) |
 
 Lax checks run when you open a buffer, after you pause editing, and when the file changes on disk (for example, when an agent edits it). `:w` never starts a verification.
@@ -91,21 +92,45 @@ require("neostar").setup({
   agent = {
     docs = {
       enabled = true, -- disabled by default
-      python = "python3",
-      server = vim.fn.expand("~/src/mine/FStar/.scripts/fstardoc/fstardoc_mcp.py"),
       index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
     },
   },
 })
 ```
 
-The server path is required; the example points to a local F* checkout with documentation support. Paths expand `~` and resolve relative to the working directory when `setup()` runs. Serving needs only Python's standard library, not `markdown-it`. Generate the index externally; neostar does not generate indexes, download tooling, or check source automatically.
+neostar reads the index itself and answers the agent's queries inside Neovim, so serving needs no Python. Generate the index externally with `fstardoc_mcp.py index` (which does need F\* and Python with `markdown-it`); neostar does not generate indexes, download tooling, or check source automatically. It reads index schema `fstardoc-retrieval-index` version 1 and refuses other versions with a warning. Paths expand `~` and resolve relative to the working directory when `setup()` runs.
 
-Six read-only tools are proxied through neostar's existing authenticated MCP endpoint: `fstardoc_find_by_contract`, `fstardoc_find_by_type`, `fstardoc_lookup`, `fstardoc_used_by`, `fstardoc_list_module`, and `fstardoc_modules`. Agents can discover lemmas by what their contracts guarantee or by type shape, then inspect signatures, documentation, and worked uses. This works with Claude, Copilot CLI, and Copilot SDK; **rebuild an older Rust helper** with `cargo install --locked --path tools/copilot` to allow these tools.
+To have `fstardoc_mcp.py serve` answer instead, set `server` (and, if needed, `python`):
+
+```lua
+docs = {
+  enabled = true,
+  index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
+  server = vim.fn.expand("~/src/mine/FStar/.scripts/fstardoc/fstardoc_mcp.py"),
+  python = "python3",
+},
+```
+
+Both backends give the same answers; the server is useful to follow a newer `fstardoc_mcp.py` than neostar knows about.
+
+Six read-only tools are offered through neostar's existing authenticated MCP endpoint: `fstardoc_find_by_contract`, `fstardoc_find_by_type`, `fstardoc_lookup`, `fstardoc_used_by`, `fstardoc_list_module`, and `fstardoc_modules`. Agents can discover lemmas by what their contracts guarantee or by type shape, then inspect signatures, documentation, and worked uses. This works with Claude, Copilot CLI, and Copilot SDK; **rebuild an older Rust helper** with `cargo install --locked --path tools/copilot` to allow these tools.
 
 The index is static, covers exported public declarations, and may be incomplete or out of date with your checker. Indexed lookup complements, rather than replaces, live `fstar_lookup` and authoritative unsaved `neostar_context`; proof candidates still require full verification and human review. The entire index is never inserted into prompts, and agents get no additional filesystem or server access.
 
-Missing or failed documentation produces a visible warning and leaves checker tools usable. Explanation follow-ups retain the original documentation configuration. `:NeostarDocsReload` discards loaded documentation after you replace the JSON file externally; pending retrievals receive a retry error, and subsequent calls reload it without interrupting checking or proof review. Runs that started without documentation gain it only on a new request. `:checkhealth neostar` reports paths, prerequisites, and the last backend error.
+Missing or failed documentation produces a visible warning and leaves checker tools usable. Explanation follow-ups retain the original documentation configuration. The in-process backend re-reads the index when the file changes; `:NeostarDocsReload` forces that, and also restarts a configured server (pending retrievals receive a retry error). Runs that started without documentation gain it only on a new request. `:checkhealth neostar` reports the backend, paths, prerequisites, and the last backend error.
+
+### Browsing the documentation
+
+`:NeostarDocs [module]` lists the declarations in the index (all, or one module's, with module-name completion) using [Telescope](https://github.com/nvim-telescope/telescope.nvim) when it is installed and `vim.ui.select` otherwise. It reads `agent.docs.index` and does not need `agent.docs.enabled`. Fuzzy matching runs on the name and the signature, and the preview shows the signature, documentation, contract, and definition.
+
+| Key | Action |
+|---|---|
+| `<CR>` | open the declaration's source at its range |
+| `<C-y>` | insert its fully qualified name at the cursor (Telescope only) |
+
+The source file is looked for in the current project's root and `include_dirs`, the working directory, and the F\* library (`fstar.exe --locate_lib` and its `fstar.include`).
+
+Telescope users can also use `:Telescope neostar declarations module=FStar.Seq.Base` and `:Telescope neostar modules` (choose a module to list its declarations). The extension loads on first use of `:NeostarDocs`, or call `require("telescope").load_extension("neostar")`.
 
 ### Persistent Copilot runti
 
