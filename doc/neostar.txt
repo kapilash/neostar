@@ -224,6 +224,59 @@ servers (including Copilot's built-in GitHub server) are not available to
 it. Anything it can read, the agent can already read in that project. The
 tools are served on 127.0.0.1 with a random port and a token per run.
 
+                                                     *neostar-fstardoc*
+Optional library documentation retrieval for proof requests, explanations, and
+explanation follow-ups: >lua
+    require("neostar").setup({
+      agent = {
+        docs = {
+          enabled = true,
+          python = "python3",
+          server = vim.fn.expand(
+            "~/src/mine/FStar/.scripts/fstardoc/fstardoc_mcp.py"
+          ),
+          index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
+        },
+      },
+    })
+<
+Defaults: disabled, python = "python3", server unset, and index at the path
+above. Configure a local fstardoc server and an already-generated JSON index.
+Paths expand ~ and resolve relative to setup-time cwd. Serving requires only
+Python's standard library; markdown-it is not needed. Index generation and
+tool installation are external; neostar never checks source to build an index.
+
+Six read-only tools use neostar's existing authenticated endpoint:
+  fstardoc_find_by_contract   Discover declarations by requires/ensures.
+  fstardoc_find_by_type       Search type shapes (approximation is reported).
+  fstardoc_lookup             Inspect signatures, docs, and definitions.
+  fstardoc_used_by            Find declarations mentioning a symbol.
+  fstardoc_list_module        List a module's public declarations.
+  fstardoc_modules            List indexed modules.
+
+All three agent transports support retrieval. Rebuild an older Copilot Rust
+helper with `cargo install --locked --path tools/copilot` for its new tool
+allowlist. No additional agent filesystem, shell, or MCP-server access is
+granted. The complete index is not inserted into prompts.
+
+The static index covers exported public declarations and may be stale or
+incomplete. Missing results do not prove a declaration does not exist.
+Use fstar_lookup for live checker context and neostar_context for unsaved
+source. Documentation never replaces full proof checking or human review.
+Missing or failed documentation warns in the agent window and continues with
+checker tools. Follow-ups retain the conversation's documentation configuration.
+
+                                                     *:NeostarDocsReload*
+:NeostarDocsReload      Discard loaded documentation after replacing its JSON
+                        file externally. Pending retrievals receive a retry
+                        error; subsequent calls read the replacement. Checking,
+                        agent inference and proof review are not stopped.
+                        Requests that started without docs gain them only on a
+                        new request. Does not generate or write the index.
+
+`:checkhealth neostar` reports documentation configuration, prerequisites and
+the last backend error without launching an agent or building an index.
+
                                                      *neostar-copilot-sdk*
 Optional persistent Copilot transport: from the neostar repository, with
 Rust 1.94 or later: >sh

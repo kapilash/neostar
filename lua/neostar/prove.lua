@@ -252,14 +252,6 @@ function M.prove(bufnr, opts)
   for k, v in pairs(tools.proof_tools(state)) do
     all[k] = v
   end
-  local token, server = mcp.register({
-    bufnr = bufnr,
-    position = { target.decl.srow, 0 },
-    target = target.name,
-    request_revision = state.revision,
-    tools = all,
-  })
-  run.token = token
   run.on_stop = function(reason)
     window:append(("\n\n_(%s)_\n"):format(reason))
     window:set_status("stopped")
@@ -276,63 +268,74 @@ function M.prove(bufnr, opts)
       end
     end)
   )
-  local handle, start_err = require("neostar.agent.runner").start({
-    bufnr = bufnr,
-    cwd = agent.project_root(s),
-    prompt = M.build_prompt(s, target, cfg.max_checks),
-    system_prompt = M.system_prompt,
-    mcp_server = server,
-    on_text = function(t)
-      if not run.ended then
-        window:append(t)
-      end
-    end,
-    on_tool = function(name)
-      if not run.ended then
-        window:set_status(("attempt %d/%d · %s"):format(state.checks, state.max_checks, name))
-      end
-    end,
-    on_done = function(res)
-      if run.ended then
-        return
-      end
-      if res.stopped then
-        agent.stop(bufnr, "stopped")
-        return
-      end
-      run.handle = nil
-      mcp.revoke(run.token)
-      run.token = nil
-      if state.proposal then
-        run.phase = "reviewing"
-        window:append("\n\n**Verified proof found.** Review the diff.\n")
-        window:set_status("proof found")
-        window:close()
-        review(bufnr, state, run, done)
-      else
-        local why = res.ok and "no proof found" or ("agent error: " .. tostring(res.error))
-        window:append(("\n\n**%s.**%s\n"):format(
-          why:sub(1, 1):upper() .. why:sub(2),
-          state.last_error and ("\n\nLast F* result:\n\n```\n" .. state.last_error .. "\n```") or ""
-        ))
-        window:set_status(state.checks >= state.max_checks and "limit reached" or "no proof")
-        done({ outcome = "no_proof", message = why, last_error = state.last_error })
-      end
-    end,
-  })
-  if not handle then
-    window:append("**Error:** " .. start_err .. "\n")
-    window:set_status("failed")
-    notify(start_err, vim.log.levels.ERROR)
-    vim.schedule(function()
-      done({ outcome = "error", message = start_err })
-    end)
-    return state
-  end
-  if not run.ended and run.phase == "running" then
-    window:append("> Agent: " .. require("neostar.agent.runner").label(handle) .. "\n\n")
-    run.handle = handle
-  end
+  require("neostar.agent.docs").prepare_run(run, vim.deepcopy(cfg.docs), window, function(doc_tools, guidance)
+    local token, server = mcp.register({
+      bufnr = bufnr,
+      position = { target.decl.srow, 0 },
+      target = target.name,
+      request_revision = state.revision,
+      tools = vim.tbl_extend("force", all, doc_tools),
+    })
+    run.token = token
+    local handle, start_err = require("neostar.agent.runner").start({
+      bufnr = bufnr,
+      cwd = agent.project_root(s),
+      prompt = M.build_prompt(s, target, cfg.max_checks) .. (guidance ~= "" and ("\n\n" .. guidance) or ""),
+      system_prompt = M.system_prompt,
+      mcp_server = server,
+      on_text = function(t)
+        if not run.ended then
+          window:append(t)
+        end
+      end,
+      on_tool = function(name)
+        if not run.ended then
+          window:set_status(("attempt %d/%d · %s"):format(state.checks, state.max_checks, name))
+        end
+      end,
+      on_done = function(res)
+        if run.ended then
+          return
+        end
+        if res.stopped then
+          agent.stop(bufnr, "stopped")
+          return
+        end
+        run.handle = nil
+        agent.release_docs(run)
+        mcp.revoke(run.token)
+        run.token = nil
+        if state.proposal then
+          run.phase = "reviewing"
+          window:append("\n\n**Verified proof found.** Review the diff.\n")
+          window:set_status("proof found")
+          window:close()
+          review(bufnr, state, run, done)
+        else
+          local why = res.ok and "no proof found" or ("agent error: " .. tostring(res.error))
+          window:append(("\n\n**%s.**%s\n"):format(
+            why:sub(1, 1):upper() .. why:sub(2),
+            state.last_error and ("\n\nLast F* result:\n\n```\n" .. state.last_error .. "\n```") or ""
+          ))
+          window:set_status(state.checks >= state.max_checks and "limit reached" or "no proof")
+          done({ outcome = "no_proof", message = why, last_error = state.last_error })
+        end
+      end,
+    })
+    if not handle then
+      window:append("**Error:** " .. start_err .. "\n")
+      window:set_status("failed")
+      notify(start_err, vim.log.levels.ERROR)
+      vim.schedule(function()
+        done({ outcome = "error", message = start_err })
+      end)
+      return
+    end
+    if not run.ended and run.phase == "running" then
+      window:append("> Agent: " .. require("neostar.agent.runner").label(handle) .. "\n\n")
+      run.handle = handle
+    end
+  end)
   return state
 end
 

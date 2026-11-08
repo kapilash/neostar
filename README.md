@@ -82,6 +82,31 @@ Two agents are supported. With the default `agent.runner = "auto"`, neostar uses
 
 Without a model setting, each agent uses its own default model; for Copilot that may be a premium model, so consider setting `agent.copilot.model`. If Copilot cannot connect to neostar's tool server (for example because a policy disables MCP servers), the run stops with an error saying so.
 
+### Library documentation retrieval
+
+Optionally give proof and explanation agents access to an existing **fstardoc JSON index**:
+
+```lua
+require("neostar").setup({
+  agent = {
+    docs = {
+      enabled = true, -- disabled by default
+      python = "python3",
+      server = vim.fn.expand("~/src/mine/FStar/.scripts/fstardoc/fstardoc_mcp.py"),
+      index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
+    },
+  },
+})
+```
+
+The server path is required; the example points to a local F* checkout with documentation support. Paths expand `~` and resolve relative to the working directory when `setup()` runs. Serving needs only Python's standard library, not `markdown-it`. Generate the index externally; neostar does not generate indexes, download tooling, or check source automatically.
+
+Six read-only tools are proxied through neostar's existing authenticated MCP endpoint: `fstardoc_find_by_contract`, `fstardoc_find_by_type`, `fstardoc_lookup`, `fstardoc_used_by`, `fstardoc_list_module`, and `fstardoc_modules`. Agents can discover lemmas by what their contracts guarantee or by type shape, then inspect signatures, documentation, and worked uses. This works with Claude, Copilot CLI, and Copilot SDK; **rebuild an older Rust helper** with `cargo install --locked --path tools/copilot` to allow these tools.
+
+The index is static, covers exported public declarations, and may be incomplete or out of date with your checker. Indexed lookup complements, rather than replaces, live `fstar_lookup` and authoritative unsaved `neostar_context`; proof candidates still require full verification and human review. The entire index is never inserted into prompts, and agents get no additional filesystem or server access.
+
+Missing or failed documentation produces a visible warning and leaves checker tools usable. Explanation follow-ups retain the original documentation configuration. `:NeostarDocsReload` discards loaded documentation after you replace the JSON file externally; pending retrievals receive a retry error, and subsequent calls reload it without interrupting checking or proof review. Runs that started without documentation gain it only on a new request. `:checkhealth neostar` reports paths, prerequisites, and the last backend error.
+
 ### Persistent Copilot runti
 
 `:NeostarProve` asks the agent to prove the `let` under the cursor (in an `.fst` file). The agent works against F\*:
@@ -123,6 +148,10 @@ require("neostar").setup({
       cmd = "copilot", model = nil, -- nil model = Copilot's default
       transport = "auto",          -- "auto", "sdk" or "cli"
       helper = "neostar-copilot",  -- optional native Rust helper
+    },
+    docs = {
+      enabled = false, python = "python3", server = nil,
+      index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
     },
     max_checks = 10,             -- candidate checks per :NeostarProve request
     timeout_ms = 300000,         -- time limit per :NeostarProve request

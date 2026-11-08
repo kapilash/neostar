@@ -50,6 +50,68 @@ describe("fstar/explain [" .. agent.name .. "]", function()
       end
     end
     util.cleanup()
+    require("neostar.agent.docs").shutdown()
+    require("neostar.agent.docs")._spawn = nil
+  end)
+
+  it("retrieves documentation and keeps its configuration for follow-ups", function()
+    local docs = require("neostar.agent.docs")
+    local helper = require("helpers.docs")
+    local spawn, cs = helper.fake()
+    docs._spawn = spawn
+    require("neostar").setup({ agent = agents.options(A, { docs = helper.config() }) })
+    local b, s = util.open_fixture("Clean.fst")
+    s = util.attach_fake(b, "clean")
+    util.wait(function() return util.idle(s) end)
+    use_plan({ runs = {
+      { { call = "fstardoc_find_by_contract", args = { name = "slice" } }, { text = "found lemma" } },
+      { { call = "fstardoc_lookup", args = { name = "slice" } }, { text = "looked up lemma" } },
+    } })
+    local st = start(b, 8, 8)
+    wait_done(st)
+    assert.is_true(st.last_result.ok)
+    assert.equals("find_by_contract", cs[1].messages[4].params.name)
+    assert.matches("Static library documentation", runs()[1].stdin)
+    require("neostar").setup({ agent = agents.options(A) })
+    st.window.opts.on_followup("which lemma?")
+    wait_done(st, 2)
+    assert.is_true(st.last_result.ok)
+    assert.equals(2, #cs)
+    assert.equals("lookup", cs[2].messages[4].params.name)
+    assert.matches("looked up lemma", st.window:text())
+  end)
+
+  it("warns and continues when documentation preparation fails", function()
+    require("neostar").setup({ agent = agents.options(A, {
+      docs = { enabled = true, server = "/missing-fstardoc.py" },
+    }) })
+    local b = util.open_fixture("Clean.fst")
+    local s = util.attach_fake(b, "clean")
+    util.wait(function() return util.idle(s) end)
+    use_plan({ { call = "fstar_lookup", args = { symbol = "len" } }, { text = "checker still works" } })
+    local st = start(b, 8, 8)
+    wait_done(st)
+    assert.is_true(st.last_result.ok)
+    assert.matches("Documentation warning", st.window:text())
+    assert.matches("unavailable this turn", runs()[1].stdin)
+  end)
+
+  it("does not launch inference after stopping during documentation preparation", function()
+    local docs = require("neostar.agent.docs")
+    local helper = require("helpers.docs")
+    local spawn, cs = helper.fake({ silent = true })
+    docs._spawn = spawn
+    require("neostar").setup({ agent = agents.options(A, { docs = helper.config() }) })
+    local b = util.open_fixture("Clean.fst")
+    local s = util.attach_fake(b, "clean")
+    util.wait(function() return util.idle(s) end)
+    use_plan({ { text = "must not run" } })
+    local st = start(b, 8, 8)
+    require("neostar.agent").stop(b, "stopped during preparation")
+    wait_done(st)
+    assert.is_true(st.last_result.stopped)
+    assert.same({}, runs())
+    assert.equals(15, cs[1].killed)
   end)
 
   it("explains the declaration at the cursor and streams into a window", function()

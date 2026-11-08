@@ -82,6 +82,32 @@ describe("fstar/proof-assist [" .. agent.name .. "]", function()
       end
     end
     util.cleanup()
+    require("neostar.agent.docs").shutdown()
+    require("neostar.agent.docs")._spawn = nil
+  end)
+
+  it("uses indexed lemmas without touching the buffer checker and releases docs before review", function()
+    local docs = require("neostar.agent.docs")
+    local helper = require("helpers.docs")
+    local spawn, cs = helper.fake()
+    docs._spawn = spawn
+    require("neostar").setup({ agent = agents.options(A, { docs = helper.config() }) })
+    local b, s, _, checker = setup()
+    checker.auto = false
+    s:check("full")
+    local checks = #checker:sent_of("full-buffer")
+    use_plan({ { call = "fstardoc_find_by_type", args = { shape = "nat -> nat" } }, FAIL, OK, PROPOSE_OK })
+    local st, wait = start(b)
+    local view = wait_view(st)
+    assert.equals("find_by_type", cs[1].messages[4].params.name)
+    assert.equals(checks, #checker:sent_of("full-buffer"))
+    assert.equals(0, #checker:sent_of("lookup"))
+    assert.equals(0, #checker:sent_of("cancel"))
+    assert.equals("full", s.running)
+    assert.is_true(cs[1].exited)
+    assert.equals(2, st.checks)
+    view.decide(false)
+    assert.equals("rejected", wait().outcome)
   end)
 
   it("finds a proof, shows the diff, and applies it on accept", function()

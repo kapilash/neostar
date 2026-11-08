@@ -10,6 +10,7 @@ local M = {}
 ---@field token? string MCP token
 ---@field scratch? neostar.Scratch
 ---@field timer? uv.uv_timer_t
+---@field docs? table documentation backend lease
 ---@field on_stop? fun(reason: string)
 ---@field ended? boolean
 
@@ -22,7 +23,15 @@ function M.project_root(session)
   return session.root or vim.fn.fnamemodify(session.file, ":h")
 end
 
+function M.release_docs(run)
+  if run.docs then
+    require("neostar.agent.docs").release(run.docs)
+    run.docs = nil
+  end
+end
+
 local function release(run)
+  M.release_docs(run)
   if run.timer and not run.timer:is_closing() then
     run.timer:stop()
     run.timer:close()

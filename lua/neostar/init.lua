@@ -26,6 +26,12 @@ M.defaults = {
     claude = { cmd = "claude", model = nil },
     --- GitHub Copilot CLI: executable, and model (nil uses Copilot's default).
     copilot = { cmd = "copilot", model = nil, transport = "auto", helper = "neostar-copilot" },
+    docs = {
+      enabled = false,
+      python = "python3",
+      server = nil,
+      index = vim.fn.stdpath("data") .. "/neostar/ulib.index.json",
+    },
     --- Maximum candidate checks per :NeostarProve request.
     max_checks = 10,
     --- Time limit for a :NeostarProve request.
@@ -75,6 +81,11 @@ local function validate_agent(a)
     vim.validate("agent.max_checks", a.max_checks, pos_int, "a positive integer")
     vim.validate("agent.timeout_ms", a.timeout_ms, pos, "a positive number")
     vim.validate("agent.copilot.helper", a.copilot.helper, "string")
+    vim.validate("agent.docs", a.docs, "table")
+    vim.validate("agent.docs.enabled", a.docs.enabled, "boolean")
+    vim.validate("agent.docs.python", a.docs.python, "string")
+    vim.validate("agent.docs.server", a.docs.server, "string", true)
+    vim.validate("agent.docs.index", a.docs.index, "string")
     vim.validate("agent.copilot.transport", a.copilot.transport, function(value)
       return value == "auto" or value == "cli" or value == "sdk"
     end, '"auto", "cli" or "sdk"')
@@ -97,6 +108,7 @@ function M.setup(opts)
     notify("neostar: invalid option " .. err .. "; using the default agent options", vim.log.levels.ERROR)
     M.options.agent = vim.deepcopy(M.defaults.agent)
   end
+  M.options.agent.docs = require("neostar.agent.docs").normalize(M.options.agent.docs)
   require("neostar.treesitter").register_with_nvim_treesitter()
 end
 
@@ -301,6 +313,9 @@ function M.stop_all()
   if package.loaded["neostar.agent.copilot_sdk"] then
     require("neostar.agent.copilot_sdk").shutdown()
   end
+  if package.loaded["neostar.agent.docs"] then
+    require("neostar.agent.docs").shutdown()
+  end
 end
 
 -- commands -----------------------------------------------------------------------
@@ -399,6 +414,13 @@ function M.create_commands()
   cmd("NeostarCancel", M.cancel, { desc = "Cancel the running F* check" })
   cmd("NeostarRestart", M.restart, { desc = "Restart the F* checker for this buffer" })
   cmd("NeostarReloadDeps", M.reload_deps, { desc = "Reload F* dependencies from disk and re-check" })
+  cmd("NeostarDocsReload", function()
+    local docs = require("neostar.agent.docs")
+    local err = docs.problem(M.options.agent.docs)
+    docs.reload()
+    notify(err or "neostar: documentation index will be read on the next tool call or agent request",
+      err and vim.log.levels.WARN or vim.log.levels.INFO)
+  end, { desc = "Reload the externally generated F* documentation index" })
   cmd("NeostarCompute", function(a)
     local term = a.args
     if term == "" and a.range > 0 then

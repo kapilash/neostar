@@ -20,6 +20,12 @@ const MCP_TOOLS: &[&str] = &[
     "fstar_diagnostics",
     "check_proof",
     "propose_proof",
+    "fstardoc_find_by_contract",
+    "fstardoc_find_by_type",
+    "fstardoc_lookup",
+    "fstardoc_used_by",
+    "fstardoc_list_module",
+    "fstardoc_modules",
 ];
 
 #[derive(Debug, Deserialize)]
@@ -457,7 +463,29 @@ mod tests {
                 "kind": "mcp", "serverName": "neostar", "toolName": "check_proof"
             }))
         ));
-        for (server, tool) in [("github", "check_proof"), ("neostar", "shell")] {
+        for tool in [
+            "fstardoc_find_by_contract",
+            "fstardoc_find_by_type",
+            "fstardoc_lookup",
+            "fstardoc_used_by",
+            "fstardoc_list_module",
+            "fstardoc_modules",
+        ] {
+            assert!(tool_filter().contains(&format!("mcp:neostar-{tool}")));
+            assert!(permitted(
+                &root,
+                &request(json!({"kind": "mcp", "serverName": "neostar", "toolName": tool}))
+            ));
+            assert!(!permitted(
+                &root,
+                &request(json!({"kind": "mcp", "serverName": "fstardoc", "toolName": tool}))
+            ));
+        }
+        for (server, tool) in [
+            ("github", "check_proof"),
+            ("neostar", "shell"),
+            ("neostar", "fstardoc_arbitrary"),
+        ] {
             assert!(!permitted(
                 &root,
                 &request(json!({

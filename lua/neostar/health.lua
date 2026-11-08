@@ -28,6 +28,21 @@ function M.check()
     else
       health.warn(parser .. " parser missing; highlighting may be unavailable (agent windows still work)")
     end
+    local docs = require("neostar.agent.docs")
+    local dc = neostar.options.agent.docs
+    if dc.enabled then
+      health.info("Documentation index: " .. dc.index)
+      health.info("Documentation server: " .. (dc.server or "(not configured)"))
+      local problem = docs.problem(dc)
+      if problem then
+        health.warn(problem)
+      else
+        health.ok("Documentation retrieval prerequisites available (" .. dc.python .. ")")
+      end
+      if docs.last_error then health.warn("Last documentation error: " .. docs.last_error) end
+    else
+      health.info("Documentation retrieval: disabled (agent.docs.enabled)")
+    end
   end
   local name, runner_error = require("neostar.agent.runner").resolve(neostar.options.agent)
   if not name then

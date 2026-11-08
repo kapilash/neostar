@@ -107,14 +107,7 @@ local function run_agent(bufnr, s, state, prompt, resume)
   local agent = require("neostar.agent")
   local mcp = require("neostar.agent.mcp")
   local tools = require("neostar.agent.tools")
-  local token, server = mcp.register({
-    bufnr = bufnr,
-    position = { state.r1, 0 },
-    selection = state.selection,
-    request_revision = vim.api.nvim_buf_get_changedtick(bufnr),
-    tools = tools.read_only(),
-  })
-  local run = { kind = "explain", token = token, state = state }
+  local run = { kind = "explain", state = state }
   local function done(res)
     if run.reported then
       return
@@ -133,60 +126,71 @@ local function run_agent(bufnr, s, state, prompt, resume)
   end
   agent.begin(bufnr, run)
   state.window:set_status("thinking…")
-  -- A follow-up goes to the agent that owns the conversation.
-  local handle, err, runner = require("neostar.agent.runner").start({
-    bufnr = bufnr,
-    keep_session = true,
-    runner = resume and state.runner or nil,
-    cwd = agent.project_root(s),
-    prompt = prompt,
-    system_prompt = M.system_prompt,
-    mcp_server = server,
-    resume = resume,
-    on_text = function(t)
-      if not run.ended then
-        state.window:append(t)
-      end
-    end,
-    on_tool = function(name)
-      if not run.ended then
-        state.window:set_status("using " .. name .. "…")
-      end
-    end,
-    on_done = function(res)
-      if run.ended then
-        return
-      end
-      if res.session_id then
-        state.session_id = res.session_id
-      end
-      if not res.stopped then
-        agent.finish(bufnr, run)
-        if res.ok then
-          state.window:set_status("done")
-        else
-          state.window:append("\n\n**Error:** " .. tostring(res.error) .. "\n")
-          state.window:set_status("failed")
+  state.docs_config = state.docs_config or vim.deepcopy(require("neostar").options.agent.docs)
+  require("neostar.agent.docs").prepare_run(run, state.docs_config, state.window, function(doc_tools, guidance)
+    local token, server = mcp.register({
+      bufnr = bufnr,
+      position = { state.r1, 0 },
+      selection = state.selection,
+      request_revision = vim.api.nvim_buf_get_changedtick(bufnr),
+      tools = vim.tbl_extend("force", tools.read_only(), doc_tools),
+    })
+    run.token = token
+    -- A follow-up goes to the agent that owns the conversation.
+    local handle, err, runner = require("neostar.agent.runner").start({
+      bufnr = bufnr,
+      keep_session = true,
+      runner = resume and state.runner or nil,
+      cwd = agent.project_root(s),
+      prompt = guidance ~= "" and (prompt .. "\n\n" .. guidance) or prompt,
+      system_prompt = M.system_prompt,
+      mcp_server = server,
+      resume = resume,
+      on_text = function(t)
+        if not run.ended then
+          state.window:append(t)
         end
-      end
-      done(res)
-    end,
-  }, resume and state.runner_config or nil)
-  if not handle then
-    agent.finish(bufnr, run)
-    state.window:append("**Error:** " .. err .. "\n")
-    state.window:set_status("failed")
-    notify(err, vim.log.levels.ERROR)
-    vim.schedule(function()
-      done({ ok = false, error = err })
-    end)
-    return
-  end
-  state.runner = runner
-  state.runner_config = handle.config
-  state.release = handle.release
-  state.window:append("> Agent: " .. require("neostar.agent.runner").label(handle) .. "\n\n")
-  run.handle = handle
+      end,
+      on_tool = function(name)
+        if not run.ended then
+          state.window:set_status("using " .. name .. "…")
+        end
+      end,
+      on_done = function(res)
+        if run.ended then
+          return
+        end
+        if res.session_id then
+          state.session_id = res.session_id
+        end
+        if not res.stopped then
+          agent.finish(bufnr, run)
+          if res.ok then
+            state.window:set_status("done")
+          else
+            state.window:append("\n\n**Error:** " .. tostring(res.error) .. "\n")
+            state.window:set_status("failed")
+          end
+        end
+        done(res)
+      end,
+    }, resume and state.runner_config or nil)
+    if not handle then
+      agent.finish(bufnr, run)
+      state.window:append("**Error:** " .. err .. "\n")
+      state.window:set_status("failed")
+      notify(err, vim.log.levels.ERROR)
+      vim.schedule(function()
+        done({ ok = false, error = err })
+      end)
+      return
+    end
+    state.runner = runner
+    state.runner_config = handle.config
+    state.release = handle.release
+    state.window:append("> Agent: " .. require("neostar.agent.runner").label(handle) .. "\n\n")
+    run.handle = handle
+  end)
 end
 
 --- Explain rows [line1, line2] (1-based, inclusive), or the declaration at the
