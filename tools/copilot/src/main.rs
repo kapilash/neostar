@@ -83,9 +83,9 @@ fn permitted(root: &std::path::Path, request: &PermissionRequestData) -> bool {
         }
         Some(PermissionRequestKind::Mcp) => {
             data["serverName"] == "neostar"
-                && data["toolName"]
-                    .as_str()
-                    .is_some_and(|name| MCP_TOOLS.contains(&name))
+                && data["toolName"].as_str().is_some_and(|name| {
+                    MCP_TOOLS.contains(&name.strip_prefix("neostar-").unwrap_or(name))
+                })
         }
         _ => false,
     }
@@ -232,6 +232,12 @@ async fn run_turn(
                 .map_err(|error| format!("Copilot event stream interrupted: {error}"))?;
             if event.event_type == "session.idle" {
                 return Ok(());
+            }
+            if event.event_type == "abort" {
+                return Err(format!(
+                    "Copilot request aborted: {}",
+                    event.data["reason"].as_str().unwrap_or("unknown reason")
+                ));
             }
             if event.event_type == "session.error" && !event.is_transient_error() {
                 return Err(event.data["message"]
@@ -463,28 +469,30 @@ mod tests {
                 "kind": "mcp", "serverName": "neostar", "toolName": "check_proof"
             }))
         ));
-        for tool in [
-            "fstardoc_find_by_contract",
-            "fstardoc_find_by_type",
-            "fstardoc_lookup",
-            "fstardoc_used_by",
-            "fstardoc_list_module",
-            "fstardoc_modules",
-        ] {
+        for tool in MCP_TOOLS {
             assert!(tool_filter().contains(&format!("mcp:neostar-{tool}")));
-            assert!(permitted(
-                &root,
-                &request(json!({"kind": "mcp", "serverName": "neostar", "toolName": tool}))
-            ));
-            assert!(!permitted(
-                &root,
-                &request(json!({"kind": "mcp", "serverName": "fstardoc", "toolName": tool}))
-            ));
+            for name in [tool.to_string(), format!("neostar-{tool}")] {
+                for data in [
+                    json!({"kind": "mcp", "serverName": "neostar", "toolName": name}),
+                    json!({"permissionRequest": {
+                        "kind": "mcp", "serverName": "neostar", "toolName": name,
+                    }}),
+                ] {
+                    assert!(permitted(&root, &request(data)), "{name}");
+                }
+                assert!(!permitted(
+                    &root,
+                    &request(json!({"kind": "mcp", "serverName": "fstardoc", "toolName": name}))
+                ));
+            }
         }
         for (server, tool) in [
             ("github", "check_proof"),
             ("neostar", "shell"),
             ("neostar", "fstardoc_arbitrary"),
+            ("neostar", "neostar-shell"),
+            ("neostar", "neostar-fstardoc_arbitrary"),
+            ("neostar", "neostar-neostar-fstar_lookup"),
         ] {
             assert!(!permitted(
                 &root,
@@ -497,6 +505,13 @@ mod tests {
             &root,
             &request(json!({
                 "permissionRequest": {"kind": "mcp", "serverName": "neostar", "toolName": "fstar_lookup"}
+            }))
+        ));
+        assert!(!permitted(
+            &root,
+            &request(json!({
+                "kind": "mcp", "serverName": "neostar", "toolName": "neostar-fstar_lookup",
+                "managedApprovalRequired": true,
             }))
         ));
     }

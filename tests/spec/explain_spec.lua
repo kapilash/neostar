@@ -352,7 +352,7 @@ describe("fstar/explain with automatic agent selection", function()
 
   it("uses Copilot when Claude is missing, and keeps the follow-up with Copilot", function()
     local copilot = agents.get("copilot")
-    require("neostar").setup({ agent = { runner = "auto", claude = { cmd = "/nonexistent/claude" }, copilot = { cmd = copilot.fake } } })
+    require("neostar").setup({ agent = { runner = "auto", claude = { cmd = "/nonexistent/claude" }, copilot = { cmd = copilot.fake, transport = "cli" } } })
     local b = util.open_fixture("Clean.fst")
     local s = util.attach_fake(b, "clean")
     util.wait(function()

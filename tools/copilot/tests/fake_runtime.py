@@ -60,6 +60,10 @@ while True:
         result = {"messageId": "answer"}
     emit({"jsonrpc": "2.0", "id": message["id"], "result": result})
     if method == "session.send":
+        if params["prompt"] == "abort":
+            event(session, "abort", {"reason": "user_initiated"})
+            event(session, "session.idle", {})
+            continue
         event(session, "assistant.message_delta", {
             "messageId": "answer", "deltaContent": sessions[session],
         })

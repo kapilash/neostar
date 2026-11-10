@@ -202,6 +202,21 @@ fn cancels_a_turn_and_can_start_another_without_restarting() {
 }
 
 #[test]
+fn reports_an_aborted_turn_instead_of_empty_success() {
+    let mut helper = Helper::new(false);
+    helper.run(1, "token", None, "abort");
+    let messages = helper.done();
+    let result = messages.last().unwrap();
+    assert_eq!(result["ok"], false, "{messages:?}");
+    assert!(
+        result["error"].as_str().unwrap().contains("user_initiated"),
+        "{result}"
+    );
+    helper.run(2, "token", None, "explain");
+    assert_eq!(helper.done().last().unwrap()["ok"], true);
+}
+
+#[test]
 fn fails_before_inference_when_mcp_is_disabled() {
     let mut helper = Helper::new(true);
     helper.run(1, "token", None, "must not send");
